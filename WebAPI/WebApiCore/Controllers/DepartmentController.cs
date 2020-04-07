@@ -7,35 +7,39 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiCore.Core.Department.Domain;
+using WebApiCore.Core.Department.Service.Interfaces;
 using WebApiCore.Models;
 
 namespace WebApiCore.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
         private EmployeeDBContext _context;
+        private readonly IDepartmentService _departmentService;
 
-        public DepartmentController(EmployeeDBContext context)
+        public DepartmentController(EmployeeDBContext context, IDepartmentService departmentService)
         {
             _context = context;
+            _departmentService = departmentService;
         }
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Departments>>> Get()
+        public async Task<ActionResult<IEnumerable<DepartmentModel>>> Get()
         {
-            var deps = await _context.Departments.ToListAsync();
+            var deps = await _departmentService.GetAllAsync();
             return Ok(deps);
         }
 
      
         [HttpGet("{id}")]
-        public async Task<ActionResult<Departments>> Get(long id)
+        public async Task<ActionResult<DepartmentModel>> Get(long id)
         {
-            var dep = await _context.Departments.FindAsync(id);
+            var dep = await _departmentService.GetByIdAsync(id);
 
             if (dep == null)
             {

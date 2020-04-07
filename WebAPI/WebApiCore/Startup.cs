@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApiCore.Infra.Configuration;
 using WebApiCore.Infra.Authentication;
+using WebApiCore.Core;
 
 namespace WebApiCore
 {
@@ -40,6 +41,8 @@ namespace WebApiCore
                 .AddJsonOptions(options => { options.JsonSerializerOptions.IgnoreNullValues = true; });
 
             services.AddAuthenticationServices();
+            services.AddCoreServices();
+
 
             var connection = Configuration.GetConnectionString("EmployeeAppDB");
             services.AddDbContext<EmployeeDBContext>(options => options.UseSqlServer(connection));
